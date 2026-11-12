@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trip-itinerary/day",
+	"version": "0.1.0",
+	"title": "Day",
+	"category": "widgets",
+	"icon": "calendar-alt",
+	"description": "One day of a trip, with a title and its own content.",
+	"parent": [ "trip-itinerary/itinerary" ],
+	"textdomain": "trip-itinerary",
+	"attributes": {
+		"title": {
+			"type": "string",
+			"source": "html",
+			"selector": ".wp-block-trip-itinerary-day__title"
+		}
+	},
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css"
+}

@@ -1,0 +1,60 @@
+// A vertical timeline: a line down the left side, with a dot for each day.
+// Colours derive from currentColor, so the block fits whatever theme it's in.
+
+.wp-block-trip-itinerary-day {
+	--trip-dot-size: 1rem;
+	--trip-line-width: 2px;
+
+	counter-increment: trip-day;
+	position: relative;
+	margin: 0 0 0 calc(var(--trip-dot-size) / 2);
+	padding-inline-start: 2rem;
+	padding-block-end: 2rem;
+	border-inline-start:
+		var(--trip-line-width) solid
+		color-mix(in srgb, currentcolor 20%, transparent);
+
+	// No line below the last day. `last-of-type` rather than `last-child`,
+	// because in the editor the "add day" button comes after the last day.
+	&:last-of-type {
+		border-inline-start-color: transparent;
+		padding-block-end: 0;
+	}
+
+	// The dot, centred on the line.
+	&::before {
+		content: "";
+		position: absolute;
+		inset-inline-start: calc((var(--trip-dot-size) + var(--trip-line-width)) / -2);
+		top: 0.2em;
+		width: var(--trip-dot-size);
+		height: var(--trip-dot-size);
+		border-radius: 50%;
+		background: currentcolor;
+	}
+
+	&__title {
+		margin-block: 0 0.75rem;
+
+		// "Day 1", "Day 2"... A CSS string can't be translated, so stage 3
+		// moves this label into the markup using block context.
+		&::before {
+			content: "Day " counter(trip-day);
+			display: block;
+			margin-block-end: 0.25rem;
+			font-size: 0.75rem;
+			font-weight: 600;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			opacity: 0.65;
+		}
+	}
+
+	&__content > :first-child {
+		margin-block-start: 0;
+	}
+
+	&__content > :last-child {
+		margin-block-end: 0;
+	}
+}
