@@ -13,7 +13,8 @@
 		"title": {
 			"type": "string",
 			"source": "html",
-			"selector": ".wp-block-trip-itinerary-day__title"
+			"selector": ".wp-block-trip-itinerary-day__title",
+			"role": "content"
 		}
 	},
 	"supports": {
