@@ -21,7 +21,7 @@ yarn build
 yarn wp-env start
 ```
 
-WordPress runs at http://localhost:8888 (log in at `/wp-admin` with `admin` / `password`), with this plugin active.
+WordPress runs at http://localhost:8888 (log in at `/wp-admin` with `admin` / `password`), with this plugin active. On every start, `bin/setup-demo.sh` makes a demo itinerary the homepage, creating it from `demo/itinerary-demo.html` if it doesn't exist yet. Run it on its own with `yarn demo`.
 
 ```bash
 yarn start
