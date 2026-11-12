@@ -1,0 +1,50 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trip-itinerary/itinerary",
+	"version": "0.1.0",
+	"title": "Itinerary",
+	"category": "widgets",
+	"icon": "location-alt",
+	"description": "A day-by-day trip plan. Add days, then fill each day with content.",
+	"keywords": [ "trip", "travel", "plan", "schedule" ],
+	"textdomain": "trip-itinerary",
+	"attributes": {
+		"title": {
+			"type": "string",
+			"source": "html",
+			"selector": ".wp-block-trip-itinerary-itinerary__title"
+		}
+	},
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": [ "wide", "full" ]
+	},
+	"example": {
+		"attributes": {
+			"title": "A weekend in Sarajevo"
+		},
+		"innerBlocks": [
+			{
+				"name": "trip-itinerary/day",
+				"attributes": { "title": "Baščaršija and the old town" },
+				"innerBlocks": [
+					{
+						"name": "core/paragraph",
+						"attributes": {
+							"content": "Coffee at the Sebilj, then a walk along the Miljacka."
+						}
+					}
+				]
+			},
+			{
+				"name": "trip-itinerary/day",
+				"attributes": { "title": "Trebević and the bobsled track" }
+			}
+		]
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

@@ -1,0 +1,17 @@
+// Loaded on the site and in the editor.
+
+.wp-block-trip-itinerary-itinerary {
+
+	&__title {
+		margin-block-end: 1.5rem;
+	}
+
+	// The list of days. Numbering comes from a CSS counter for now; stage 3
+	// replaces it with block context so each day knows its own number and date.
+	&__days {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		counter-reset: trip-day;
+	}
+}
