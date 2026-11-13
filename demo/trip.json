@@ -1,0 +1,104 @@
+{
+	"title": "A long weekend in Bosnia",
+	"startDate": "2026-12-04",
+	"travellers": 2,
+	"header": {
+		"buttonText": "Request a quote"
+	},
+	"days": [
+		{
+			"title": "Baščaršija and the old town",
+			"location": "Sarajevo",
+			"text": "Coffee at the Sebilj, then a slow walk along the Miljacka to the Latin Bridge.",
+			"photos": [
+				{
+					"file": "bascarsija-1",
+					"alt": "The old bazaar of Baščaršija"
+				},
+				{
+					"file": "bascarsija-2",
+					"alt": "The Sebilj fountain"
+				},
+				{
+					"file": "bascarsija-3",
+					"alt": "The Latin Bridge"
+				},
+				{
+					"file": "bascarsija-4",
+					"alt": "The Miljacka river at dusk"
+				},
+				{
+					"file": "bascarsija-5",
+					"alt": "Vijećnica, the old city hall"
+				}
+			]
+		},
+		{
+			"title": "Trebević and the bobsled track",
+			"location": "Trebević",
+			"text": "Cable car up the mountain, then walk down past the old Olympic bobsled track.",
+			"photos": [
+				{
+					"file": "trebevic-1",
+					"alt": "Forest paths on Trebević"
+				},
+				{
+					"file": "trebevic-2",
+					"alt": "The Trebević cable car"
+				},
+				{
+					"file": "trebevic-3",
+					"alt": "The Olympic bobsled track"
+				},
+				{
+					"file": "trebevic-4",
+					"alt": "The view over Sarajevo from Trebević"
+				}
+			]
+		},
+		{
+			"title": "Stari Most and the Neretva",
+			"location": "Mostar",
+			"text": "Morning train down the Neretva valley, the Old Bridge at sunset, and dinner in the old town.",
+			"photos": [
+				{
+					"file": "mostar-1",
+					"alt": "Stari Most, the Old Bridge"
+				},
+				{
+					"file": "mostar-2",
+					"alt": "The Neretva river"
+				},
+				{
+					"file": "mostar-3",
+					"alt": "Mostar's old town"
+				}
+			]
+		}
+	],
+	"price": {
+		"amount": "€640",
+		"per": "/ person",
+		"note": "Estimate for two people sharing, based on December prices. Flights are not included.",
+		"included": [
+			"3 nights in boutique hotels",
+			"Train from Sarajevo to Mostar",
+			"Trebević cable car tickets",
+			"A local guide in Mostar",
+			"Breakfast every day"
+		],
+		"excluded": [
+			"Flights",
+			"Lunch and dinner",
+			"Travel insurance"
+		],
+		"requestNote": "Free and without commitment. We reply within one working day.",
+		"requestText": "Request a quotation",
+		"requestUrl": "mailto:hello@example.com?subject=A%20long%20weekend%20in%20Bosnia"
+	},
+	"footer": {
+		"logo": "logo",
+		"links": "<a href=\"mailto:hello@example.com\">Contact</a> <a href=\"https://github.com/alemdinarevic/itinerary-builder-wp\">Source on GitHub</a>",
+		"credit": "Built with Trip Itinerary"
+	}
+}
