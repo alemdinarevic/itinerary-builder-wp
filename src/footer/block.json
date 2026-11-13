@@ -1,0 +1,32 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trip-itinerary/footer",
+	"version": "0.1.0",
+	"title": "Trip footer",
+	"category": "widgets",
+	"icon": "align-wide",
+	"description": "A logo linking home, a row of links and a credit line. Without a logo it uses the site's own.",
+	"keywords": [ "footer", "logo", "links" ],
+	"textdomain": "trip-itinerary",
+	"attributes": {
+		"logo": {
+			"type": "object"
+		},
+		"links": {
+			"type": "string",
+			"role": "content"
+		},
+		"credit": {
+			"type": "string",
+			"role": "content"
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}
