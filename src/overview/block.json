@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trip-itinerary/overview",
+	"version": "0.1.0",
+	"title": "Trip overview",
+	"category": "widgets",
+	"icon": "info-outline",
+	"description": "The trip at a glance: dates, travellers and route, filled in from the itinerary.",
+	"parent": [ "trip-itinerary/itinerary" ],
+	"textdomain": "trip-itinerary",
+	"usesContext": [ "trip-itinerary/startDate", "trip-itinerary/travellers" ],
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}
