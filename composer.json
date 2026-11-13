@@ -1,0 +1,13 @@
+{
+	"name": "alemdinarevic/trip-itinerary",
+	"description": "Gutenberg blocks for building day-by-day travel itineraries.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"require-dev": {
+		"phpunit/phpunit": "^9.6",
+		"yoast/phpunit-polyfills": "^3.1"
+	},
+	"config": {
+		"sort-packages": true
+	}
+}
