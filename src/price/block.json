@@ -1,0 +1,44 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trip-itinerary/price",
+	"version": "0.1.0",
+	"title": "Trip price",
+	"category": "widgets",
+	"icon": "money-alt",
+	"description": "The trip's price, what it includes and excludes, and a button to request a quote. The Trip header's button scrolls here.",
+	"parent": [ "trip-itinerary/itinerary" ],
+	"textdomain": "trip-itinerary",
+	"attributes": {
+		"amount": {
+			"type": "string",
+			"role": "content"
+		},
+		"per": {
+			"type": "string",
+			"role": "content"
+		},
+		"note": {
+			"type": "string",
+			"role": "content"
+		},
+		"requestNote": {
+			"type": "string",
+			"role": "content"
+		},
+		"requestText": {
+			"type": "string",
+			"role": "content"
+		},
+		"requestUrl": {
+			"type": "string"
+		}
+	},
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}

@@ -1,0 +1,202 @@
+// The Trip price: a card with the price in large gradient text, what's
+// included and excluded, and a request section. Based on the Offtryp
+// itinerary price section. Theme authors can change the colours through
+// the custom properties below.
+
+.wp-block-trip-itinerary-price {
+	--trip-price-start: var(--trip-price-gradient-start, rgb(87 93 246));
+	--trip-price-end: var(--trip-price-gradient-end, rgb(78 205 196));
+	--trip-included: var(--trip-included-color, #2e7d32);
+	--trip-excluded: var(--trip-excluded-color, #d32f2f);
+	--trip-price-gradient: linear-gradient(135deg, var(--trip-price-start), var(--trip-price-end));
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 24px;
+	margin-block: 1rem 3rem;
+	text-align: center;
+
+	&__card {
+		width: 100%;
+		padding: 56px 40px;
+		border: 1px solid color-mix(in srgb, var(--trip-price-start) 10%, transparent);
+		border-radius: 24px;
+		background: linear-gradient(135deg, #fff 0%, #f8f9ff 100%);
+		box-shadow: 0 4px 20px color-mix(in srgb, var(--trip-price-start) 8%, transparent);
+		color: #1e1e1e;
+	}
+
+	&__amount {
+		margin: 0 0 12px;
+		font-size: clamp(2rem, 6vw, 3rem);
+		font-weight: 700;
+		line-height: 1.15;
+	}
+
+	// The gradient is painted through the text.
+	&__value,
+	&__per {
+		background: var(--trip-price-gradient);
+		background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+
+	&__per {
+		margin-inline-start: 0.2em;
+		font-size: 1.125rem;
+		font-weight: 600;
+	}
+
+	&__note {
+		max-width: 34rem;
+		margin: 0 auto 8px;
+		font-size: 15px;
+		line-height: 1.6;
+		opacity: 0.7;
+	}
+
+	// The heading spans both columns; the lists sit side by side when
+	// there's room.
+	&__details {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+		gap: 0 32px;
+		margin-top: 40px;
+		text-align: start;
+
+		> :not(.wp-block-list) {
+			grid-column: 1 / -1;
+		}
+
+		> .wp-block-heading {
+			margin: 0 0 24px;
+			font-size: 1.125rem;
+			font-weight: 600;
+			text-align: center;
+		}
+	}
+
+	&__request {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 16px;
+		width: 100%;
+		padding: 24px;
+		border-radius: 20px;
+	}
+
+	&__request-note {
+		max-width: 30rem;
+		margin: 0;
+		font-size: 14px;
+		line-height: 1.6;
+		opacity: 0.7;
+	}
+
+	&__button {
+		display: inline-block;
+		padding: 12px 28px;
+		border-radius: 999px;
+		background: #1e1e1e;
+		color: #fff;
+		font-size: 15px;
+		font-weight: 600;
+		text-decoration: none;
+		transition:
+			opacity 0.18s ease,
+			transform 0.18s ease;
+
+		&:hover,
+		&:focus-visible {
+			color: #fff;
+			opacity: 0.85;
+			transform: translateY(-1px);
+		}
+
+		// In the editor, before any text is typed.
+		&:empty,
+		&:has([data-rich-text-placeholder]) {
+			border: 1px dashed color-mix(in srgb, currentcolor 40%, transparent);
+			background: none;
+			color: inherit;
+		}
+
+		@media print {
+			display: none;
+		}
+	}
+
+	@media (max-width: 600px) {
+
+		&__card {
+			padding: 32px 20px;
+		}
+	}
+}
+
+// Arriving from the Trip header's button: a brief highlight around the card,
+// like the Offtryp price section. Two classes beat themes' `:target` rules.
+.wp-block-trip-itinerary-itinerary .wp-block-trip-itinerary-price {
+	scroll-margin-top: calc(50px + 1rem);
+
+	&:target .wp-block-trip-itinerary-price__card {
+		animation: trip-price-highlight 1.6s ease 0.4s;
+	}
+}
+
+@keyframes trip-price-highlight {
+
+	30%,
+	60% {
+		box-shadow:
+			0 0 0 3px var(--trip-price-start),
+			0 4px 20px color-mix(in srgb, var(--trip-price-start) 20%, transparent);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.wp-block-trip-itinerary-itinerary .wp-block-trip-itinerary-price:target .wp-block-trip-itinerary-price__card {
+		animation: none;
+		box-shadow: 0 0 0 3px var(--trip-price-start);
+	}
+}
+
+// List styles for what the price includes (✓) and excludes (✗).
+.wp-block-list.is-style-trip-included,
+.wp-block-list.is-style-trip-excluded {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
+	li {
+		display: flex;
+		align-items: flex-start;
+		gap: 12px;
+		margin-bottom: 18px;
+		font-size: 16px;
+		font-weight: 500;
+
+		&::before {
+			content: "";
+			flex: 0 0 26px;
+			height: 26px;
+			background: currentcolor;
+			mask: var(--trip-list-icon) center / contain no-repeat;
+		}
+	}
+}
+
+.wp-block-list.is-style-trip-included li::before {
+	--trip-list-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E");
+
+	color: var(--trip-included, #2e7d32);
+}
+
+.wp-block-list.is-style-trip-excluded li::before {
+	--trip-list-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z'/%3E%3C/svg%3E");
+
+	color: var(--trip-excluded, #d32f2f);
+}
