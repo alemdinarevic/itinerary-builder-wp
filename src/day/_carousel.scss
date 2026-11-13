@@ -1,0 +1,192 @@
+// The stacked photo carousel below each day: the current photo in the
+// centre, two smaller ones on each side, all sliding into place. Positions
+// come from slidePosition() (JS) and trip_itinerary_slide_position() (PHP)
+// as a data-position attribute; this file decides what each one looks like.
+
+.wp-block-trip-itinerary-carousel {
+	// Sizes for wide layouts. The container query below swaps in smaller
+	// ones when the carousel itself is narrow, whatever the screen size.
+	--center-width: 360px;
+	--near-width: 220px;
+	--near-shift: 120px;
+	--near-scale: 0.82;
+	--far-width: 110px;
+	--far-shift: 200px;
+	--far-scale: 0.66;
+
+	container-type: inline-size;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-block-start: 1.5rem;
+
+	// With two or three photos there are no far neighbours, so the near
+	// ones spread out a little more.
+	&[data-count="2"],
+	&[data-count="3"] {
+		--near-shift: 140px;
+	}
+
+	&__track {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		height: 400px;
+		overflow: hidden;
+		border-radius: 24px;
+	}
+
+	&__slide {
+		position: absolute;
+		height: 100%;
+		width: var(--center-width);
+		margin: 0;
+		overflow: hidden;
+		border-radius: 24px;
+		cursor: pointer;
+		transition:
+			transform 0.5s ease,
+			width 0.5s ease;
+
+		&[data-position="center"] {
+			z-index: 3;
+			cursor: default;
+		}
+
+		&[data-position="right"],
+		&[data-position="left"] {
+			z-index: 2;
+			width: var(--near-width);
+		}
+
+		&[data-position="right"] {
+			transform: translateX(var(--near-shift)) scale(var(--near-scale));
+		}
+
+		&[data-position="left"] {
+			transform: translateX(calc(var(--near-shift) * -1)) scale(var(--near-scale));
+		}
+
+		&[data-position="right-far"],
+		&[data-position="left-far"] {
+			z-index: 1;
+			width: var(--far-width);
+		}
+
+		&[data-position="right-far"] {
+			transform: translateX(var(--far-shift)) scale(var(--far-scale));
+		}
+
+		&[data-position="left-far"] {
+			transform: translateX(calc(var(--far-shift) * -1)) scale(var(--far-scale));
+		}
+
+		&[data-position="hidden"] {
+			z-index: 0;
+			width: 0;
+			transform: scale(0);
+		}
+	}
+
+	&__image {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		filter: brightness(80%);
+		transition: filter 0.4s ease;
+	}
+
+	&__slide[data-position="center"] &__image {
+		filter: none;
+	}
+
+	&__credit {
+		position: absolute;
+		bottom: 8px;
+		left: 50%;
+		transform: translateX(-50%);
+		padding: 2px 8px;
+		border-radius: 12px;
+		background: rgb(0 0 0 / 25%);
+		backdrop-filter: blur(4px);
+		color: #fff;
+		font-size: 0.6875rem;
+		white-space: nowrap;
+		pointer-events: none;
+	}
+
+	&__slide:not([data-position="center"]) &__credit {
+		display: none;
+	}
+
+	&__controls {
+		display: flex;
+		align-items: center;
+		margin-block-start: 1rem;
+	}
+
+	&__arrow {
+		display: inline-flex;
+		margin: 0 12px;
+		padding: 4px;
+		border: 0;
+		background: none;
+		color: inherit;
+		opacity: 0.6;
+		cursor: pointer;
+
+		&:hover,
+		&:focus-visible {
+			opacity: 1;
+		}
+	}
+
+	&__dots {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin: 0 8px;
+	}
+
+	&__dot {
+		width: 10px;
+		height: 10px;
+		padding: 0;
+		border: 0;
+		border-radius: 50%;
+		background: color-mix(in srgb, currentcolor 25%, transparent);
+		cursor: pointer;
+		transition:
+			scale 0.3s ease,
+			background-color 0.3s ease;
+
+		&[aria-current="true"] {
+			background: currentcolor;
+			scale: 1.19;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+
+		&__slide,
+		&__image,
+		&__dot {
+			transition: none;
+		}
+	}
+}
+
+// Narrow carousels, such as on phones.
+@container (max-width: 520px) {
+
+	.wp-block-trip-itinerary-carousel__track {
+		--center-width: 240px;
+		--near-width: 150px;
+		--near-shift: 100px;
+		--far-width: 100px;
+		--far-shift: 150px;
+	}
+}
