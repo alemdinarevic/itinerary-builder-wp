@@ -1,0 +1,28 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trip-itinerary/header",
+	"version": "0.1.0",
+	"title": "Trip header",
+	"category": "widgets",
+	"icon": "location",
+	"description": "A bar that stays at the top while scrolling, with a link to each place the trip visits and an optional button.",
+	"parent": [ "trip-itinerary/itinerary" ],
+	"textdomain": "trip-itinerary",
+	"attributes": {
+		"buttonText": {
+			"type": "string",
+			"role": "content"
+		},
+		"buttonUrl": {
+			"type": "string"
+		}
+	},
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}

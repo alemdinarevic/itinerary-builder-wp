@@ -1,0 +1,138 @@
+// The Trip header: a bar that sticks to the top of the screen while the days
+// scroll by, with a pill for each stop. Based on the Offtryp itinerary header.
+
+.wp-block-trip-itinerary-header {
+	--trip-accent-color: var(--trip-accent, #70b59e);
+
+	// Sticks below the WordPress admin bar when someone is logged in.
+	position: sticky;
+	top: var(--wp-admin--admin-bar--height, 0px);
+	z-index: 10;
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	min-height: 50px;
+	margin-block: 0 2rem;
+	background: var(--wp--preset--color--base, Canvas);
+
+	&__scroll {
+		display: flex;
+		align-items: center;
+		flex: 1;
+		min-width: 0;
+		padding-block: 12px;
+		overflow-x: auto;
+		overflow-y: hidden;
+		scrollbar-width: none;
+
+		&::-webkit-scrollbar {
+			display: none;
+		}
+	}
+
+	&__pin {
+		flex-shrink: 0;
+		color: var(--trip-accent-color);
+	}
+
+	&__stops {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin: 0 0 0 16px;
+		padding: 0;
+		list-style: none;
+	}
+
+	&__stop {
+		display: block;
+		min-width: 80px;
+		max-width: 160px;
+		padding: 5px 14px;
+		overflow: hidden;
+		border: 1px solid color-mix(in srgb, currentcolor 12%, transparent);
+		border-radius: 20px;
+		background: color-mix(in srgb, currentcolor 5%, transparent);
+		color: inherit;
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.01em;
+		text-align: center;
+		text-decoration: none;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		transition:
+			max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+			background-color 0.18s ease,
+			border-color 0.18s ease,
+			color 0.18s ease,
+			transform 0.18s ease;
+
+		&:hover,
+		&:focus-visible {
+			max-width: 400px;
+			border-color: var(--trip-accent-color);
+			background: var(--trip-accent-color);
+			color: #fff;
+			text-overflow: clip;
+			transform: translateY(-1px);
+		}
+	}
+
+	&__empty {
+		margin-inline-start: 16px;
+		font-size: 12px;
+		opacity: 0.6;
+	}
+
+	&__button {
+		flex-shrink: 0;
+		padding: 7px 18px;
+		border-radius: 20px;
+		background: var(--trip-accent-color);
+		color: #fff;
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.02em;
+		text-decoration: none;
+		white-space: nowrap;
+		transition:
+			opacity 0.18s ease,
+			transform 0.18s ease;
+
+		&:hover,
+		&:focus-visible {
+			color: #fff;
+			opacity: 0.85;
+			transform: translateY(-1px);
+		}
+
+		// In the editor, before any text is typed.
+		&:empty,
+		&:has([data-rich-text-placeholder]) {
+			border: 1px dashed color-mix(in srgb, currentcolor 40%, transparent);
+			background: none;
+			color: inherit;
+		}
+
+		@media print {
+			display: none;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+
+		&__stop,
+		&__button {
+			transition: none;
+		}
+	}
+}
+
+// Smooth scrolling to a day when a stop is clicked, on pages with a header.
+@media (prefers-reduced-motion: no-preference) {
+
+	html:has(.wp-block-trip-itinerary-header) {
+		scroll-behavior: smooth;
+	}
+}
