@@ -6,12 +6,11 @@
 		margin-block-end: 1.5rem;
 	}
 
-	// The list of days. Numbering comes from a CSS counter for now; stage 3
-	// replaces it with block context so each day knows its own number and date.
+	// The days. Content saved by version 0.1 still uses an <ol> here until
+	// it's re-saved, hence the list resets.
 	&__days {
 		list-style: none;
 		margin: 0;
 		padding: 0;
-		counter-reset: trip-day;
 	}
 }

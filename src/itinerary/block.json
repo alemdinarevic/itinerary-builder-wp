@@ -12,10 +12,18 @@
 	"attributes": {
 		"title": {
 			"type": "string",
-			"source": "html",
-			"selector": ".wp-block-trip-itinerary-itinerary__title",
 			"role": "content"
+		},
+		"startDate": {
+			"type": "string"
+		},
+		"travellers": {
+			"type": "number"
 		}
+	},
+	"providesContext": {
+		"trip-itinerary/startDate": "startDate",
+		"trip-itinerary/travellers": "travellers"
 	},
 	"supports": {
 		"html": false,
@@ -29,7 +37,9 @@
 		"innerBlocks": [
 			{
 				"name": "trip-itinerary/day",
-				"attributes": { "title": "Baščaršija and the old town" },
+				"attributes": {
+					"title": "Baščaršija and the old town"
+				},
 				"innerBlocks": [
 					{
 						"name": "core/paragraph",
@@ -41,11 +51,14 @@
 			},
 			{
 				"name": "trip-itinerary/day",
-				"attributes": { "title": "Trebević and the bobsled track" }
+				"attributes": {
+					"title": "Trebević and the bobsled track"
+				}
 			}
 		]
 	},
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
-	"style": "file:./style-index.css"
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
 }

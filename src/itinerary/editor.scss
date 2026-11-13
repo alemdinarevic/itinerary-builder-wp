@@ -1,11 +1,12 @@
 // Loaded only in the editor.
 
-// The "add day" button. The editor positions block appenders absolutely,
-// which puts it on top of the last day, so place it below the days instead.
+// The "Add day" button (add-day-button.js). The editor positions block
+// appenders absolutely, which would put it on top of the last block, so
+// place it below the Itinerary's blocks instead.
 .wp-block-trip-itinerary-itinerary__days > .block-list-appender {
 	position: relative;
 	inset: auto;
+	display: flex;
+	justify-content: center;
 	margin-block-start: 1.5rem;
-	margin-inline-start: 0.5rem;
-	padding-inline-start: 2rem;
 }

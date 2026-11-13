@@ -1,30 +1,7 @@
-import {
-	RichText,
-	useBlockProps,
-	useInnerBlocksProps,
-} from '@wordpress/block-editor';
+import { InnerBlocks } from '@wordpress/block-editor';
 
-// The HTML stored in the post. It must match what this function returns for
-// the same attributes, or the editor reports the block as invalid. Change it
-// later only together with a `deprecated` entry (stage 7).
-export default function save( { attributes } ) {
-	const { title } = attributes;
-
-	const blockProps = useBlockProps.save();
-	const innerBlocksProps = useInnerBlocksProps.save( {
-		className: 'wp-block-trip-itinerary-itinerary__days',
-	} );
-
-	return (
-		<section { ...blockProps }>
-			{ ! RichText.isEmpty( title ) && (
-				<RichText.Content
-					tagName="h2"
-					className="wp-block-trip-itinerary-itinerary__title"
-					value={ title }
-				/>
-			) }
-			<ol { ...innerBlocksProps } />
-		</section>
-	);
+// The Itinerary is rendered on the server (render.php), so only its child
+// blocks are saved. The old static markup is handled in deprecated.js.
+export default function save() {
+	return <InnerBlocks.Content />;
 }
