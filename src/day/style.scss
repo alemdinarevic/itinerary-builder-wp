@@ -1,53 +1,118 @@
-// A vertical timeline: a line down the left side, with a dot for each day.
-// Colours derive from currentColor, so the block fits whatever theme it's in.
+@use "carousel";
+
+// The timeline: a numbered circle for each day, joined by a thin line that
+// fades from one day to the next. The accent colour can be changed by
+// setting --trip-accent, for example in the theme.
 
 .wp-block-trip-itinerary-day {
-	--trip-dot-size: 1rem;
+	--trip-accent-color: var(--trip-accent, #70b59e);
+	--trip-marker-size: 2rem;
 	--trip-line-width: 2px;
+	--trip-line-gap: 6px;
+	--trip-line-start: color-mix(in srgb, var(--trip-accent-color) 70%, transparent);
+	--trip-line-end: color-mix(in srgb, var(--trip-accent-color) 20%, transparent);
 
-	counter-increment: trip-day;
 	position: relative;
-	margin: 0 0 0 calc(var(--trip-dot-size) / 2);
-	padding-inline-start: 2rem;
-	padding-block-end: 2rem;
-	border-inline-start:
-		var(--trip-line-width) solid
-		color-mix(in srgb, currentcolor 20%, transparent);
+	padding-inline-start: calc(var(--trip-marker-size) + 1.25rem);
+	padding-block-end: 3rem;
 
-	// No line below the last day. `last-of-type` rather than `last-child`,
-	// because in the editor the "add day" button comes after the last day.
-	&:last-of-type {
-		border-inline-start-color: transparent;
-		padding-block-end: 0;
-	}
 
-	// The dot, centred on the line.
+	// The line from this day's circle down to the next day's, with a small
+	// gap at each end so it doesn't touch the circles.
 	&::before {
 		content: "";
 		position: absolute;
-		inset-inline-start: calc((var(--trip-dot-size) + var(--trip-line-width)) / -2);
-		top: 0.2em;
-		width: var(--trip-dot-size);
-		height: var(--trip-dot-size);
+		inset-inline-start: calc((var(--trip-marker-size) - var(--trip-line-width)) / 2);
+		top: calc(var(--trip-marker-size) + var(--trip-line-gap));
+		bottom: var(--trip-line-gap);
+		width: var(--trip-line-width);
+		border-radius: var(--trip-line-width);
+		background: linear-gradient(to bottom, var(--trip-line-start), var(--trip-line-end));
+	}
+
+	// After the last day the line fades away. `last-of-type` rather than
+	// `last-child`, because in the editor the "add day" button comes last.
+	&:last-of-type {
+		padding-block-end: 1rem;
+
+		&::before {
+			--trip-line-start: color-mix(in srgb, var(--trip-accent-color) 50%, transparent);
+			--trip-line-end: transparent;
+		}
+	}
+
+	&__marker {
+		position: absolute;
+		inset-inline-start: 0;
+		top: 0;
+		display: grid;
+		place-items: center;
+		width: var(--trip-marker-size);
+		height: var(--trip-marker-size);
 		border-radius: 50%;
-		background: currentcolor;
+		background: var(--trip-accent-color);
+		box-shadow:
+			0 0 0 4px color-mix(in srgb, var(--trip-accent-color) 18%, transparent),
+			0 4px 12px color-mix(in srgb, var(--trip-accent-color) 35%, transparent);
+		color: #fff;
+		font-size: 0.8125rem;
+		font-variant-numeric: tabular-nums;
+		font-weight: 700;
+		line-height: 1;
+		transition:
+			transform 0.25s ease,
+			box-shadow 0.25s ease;
+	}
+
+	&:hover &__marker {
+		box-shadow:
+			0 0 0 6px color-mix(in srgb, var(--trip-accent-color) 22%, transparent),
+			0 6px 16px color-mix(in srgb, var(--trip-accent-color) 40%, transparent);
+		transform: scale(1.08);
+	}
+
+	// The date beside the circle, centred on it. "Day 1" and the separator
+	// are only for screen readers; the circle shows the number.
+	&__label {
+		margin-block: 0 0.25rem;
+		font-size: 0.75rem;
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		line-height: var(--trip-marker-size);
+		text-transform: uppercase;
+		opacity: 0.65;
+
+		&:not(:has(time)) {
+			margin: 0;
+		}
+	}
+
+	&__label-day,
+	&__label-sep {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+
+		&__marker {
+			transition: none;
+		}
 	}
 
 	&__title {
 		margin-block: 0 0.75rem;
+	}
 
-		// "Day 1", "Day 2"... A CSS string can't be translated, so stage 3
-		// moves this label into the markup using block context.
-		&::before {
-			content: "Day " counter(trip-day);
-			display: block;
-			margin-block-end: 0.25rem;
-			font-size: 0.75rem;
-			font-weight: 600;
-			letter-spacing: 0.08em;
-			text-transform: uppercase;
-			opacity: 0.65;
-		}
+	// Pulled up under the title, which keeps its spacing when there's no location.
+	&__location {
+		margin-block: -0.5rem 0.75rem;
+		font-size: 0.875em;
+		opacity: 0.75;
 	}
 
 	&__content > :first-child {
@@ -57,4 +122,11 @@
 	&__content > :last-child {
 		margin-block-end: 0;
 	}
+}
+
+// Clears the sticky Trip header when one of its stops links to a day. The
+// WordPress admin bar is already allowed for by WordPress's own
+// scroll-padding. Two classes, so it beats themes' `:target` rules.
+.wp-block-trip-itinerary-itinerary .wp-block-trip-itinerary-day {
+	scroll-margin-top: calc(50px + 1rem);
 }

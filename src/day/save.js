@@ -1,25 +1,7 @@
-import {
-	RichText,
-	useBlockProps,
-	useInnerBlocksProps,
-} from '@wordpress/block-editor';
+import { InnerBlocks } from '@wordpress/block-editor';
 
-export default function save( { attributes } ) {
-	const { title } = attributes;
-
-	const blockProps = useBlockProps.save();
-	const innerBlocksProps = useInnerBlocksProps.save( {
-		className: 'wp-block-trip-itinerary-day__content',
-	} );
-
-	return (
-		<li { ...blockProps }>
-			<RichText.Content
-				tagName="h3"
-				className="wp-block-trip-itinerary-day__title"
-				value={ title }
-			/>
-			<div { ...innerBlocksProps } />
-		</li>
-	);
+// The Day is rendered on the server (render.php), so only its child blocks
+// are saved. The old static markup is handled in deprecated.js.
+export default function save() {
+	return <InnerBlocks.Content />;
 }

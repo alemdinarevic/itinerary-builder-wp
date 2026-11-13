@@ -12,15 +12,27 @@
 	"attributes": {
 		"title": {
 			"type": "string",
-			"source": "html",
-			"selector": ".wp-block-trip-itinerary-day__title",
 			"role": "content"
+		},
+		"location": {
+			"type": "string",
+			"role": "content"
+		},
+		"photos": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "object"
+			}
 		}
 	},
+	"usesContext": [ "trip-itinerary/startDate" ],
 	"supports": {
 		"html": false,
 		"reusable": false
 	},
 	"editorScript": "file:./index.js",
-	"style": "file:./style-index.css"
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScriptModule": "file:./view.js"
 }
