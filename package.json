@@ -4,23 +4,38 @@
 	"description": "Gutenberg blocks for building day-by-day travel itineraries.",
 	"author": "Alem Dinarević",
 	"license": "GPL-2.0-or-later",
-		"scripts": {
-		"build": "wp-scripts build --blocks-manifest",
+	"scripts": {
+		"build": "wp-scripts build --blocks-manifest --experimental-modules",
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style",
 		"lint:js": "wp-scripts lint-js",
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip",
-		"start": "wp-scripts start --blocks-manifest",
+		"start": "wp-scripts start --blocks-manifest --experimental-modules",
+		"test": "yarn test:unit && yarn test:php && yarn test:e2e",
+		"test:unit": "TZ=Pacific/Auckland wp-scripts test-unit-js",
+		"test:php": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename \"$PWD\") env WORDPRESS_TABLE_PREFIX=phpunit_ vendor/bin/phpunit",
+		"test:e2e": "wp-scripts test-playwright --config playwright.config.js",
+		"test:php:setup": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename \"$PWD\") composer install",
 		"env": "wp-env",
-		"demo": "bash bin/setup-demo.sh"
+		"demo": "bash bin/setup-demo.sh",
+		"demo:reset": "bash bin/setup-demo.sh reset"
 	},
 	"dependencies": {
 		"@wordpress/block-editor": "latest",
 		"@wordpress/blocks": "latest",
-		"@wordpress/i18n": "latest"
+		"@wordpress/components": "^44.0.0",
+		"@wordpress/core-data": "^9.1.0",
+		"@wordpress/data": "^11.1.0",
+		"@wordpress/date": "^6.1.0",
+		"@wordpress/element": "^10.1.0",
+		"@wordpress/i18n": "latest",
+		"@wordpress/icons": "^20.0.0",
+		"@wordpress/interactivity": "^8.1.0"
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.65.0",
+		"@wordpress/e2e-test-utils-playwright": "^3.2.0",
 		"@wordpress/env": "^12.1.0",
 		"@wordpress/scripts": "^35.0.0"
 	}

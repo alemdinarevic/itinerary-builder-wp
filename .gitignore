@@ -31,3 +31,10 @@ node_modules/
 
 # Build output (run `yarn build`)
 /build
+
+# Composer dependencies (installed inside wp-env)
+/vendor
+
+# Playwright output
+/artifacts
+/.phpunit.result.cache
