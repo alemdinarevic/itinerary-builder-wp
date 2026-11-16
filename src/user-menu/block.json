@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trip-itinerary/user-menu",
+	"version": "0.1.0",
+	"title": "User menu",
+	"category": "widgets",
+	"icon": "admin-users",
+	"description": "For logged-in visitors, their initial in a circle that opens a menu with their name, links and Log out. Others get a Log in button.",
+	"keywords": [ "account", "profile", "avatar", "login" ],
+	"textdomain": "trip-itinerary",
+	"attributes": {
+		"links": {
+			"type": "string",
+			"role": "content"
+		}
+	},
+	"supports": {
+		"html": false
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScriptModule": "file:./view.js"
+}
