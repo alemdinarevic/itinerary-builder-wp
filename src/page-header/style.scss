@@ -1,0 +1,164 @@
+// The Page header, after the Offtryp app header: logo, links and a button
+// on a translucent bar that blurs what scrolls under it. On narrow screens
+// the links fold into a menu. Uses the tokens in assets/ui.css.
+
+.wp-block-trip-itinerary-page-header {
+	position: relative;
+	z-index: 20;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px 32px;
+	box-sizing: border-box;
+	padding: 12px 24px;
+	border-bottom: 1px solid color-mix(in srgb, currentcolor 8%, transparent);
+	background: rgb(255 255 255 / 66%);
+	backdrop-filter: blur(12px) saturate(1.4);
+	color: var(--trip-color-text);
+
+	&.is-sticky {
+		position: sticky;
+		top: var(--wp-admin--admin-bar--height, 0px);
+	}
+
+	&__logo {
+		display: inline-flex;
+		align-items: center;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	&__logo-image {
+		width: auto;
+		max-width: 175px;
+		height: 44px;
+		object-fit: contain;
+	}
+
+	&__site-name {
+		font-size: 1.125rem;
+		font-weight: 700;
+	}
+
+	&__nav {
+		flex: 1;
+	}
+
+	&__links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px 24px;
+		margin: 0;
+		font-size: 15px;
+		font-weight: 600;
+
+		a {
+			color: inherit;
+			text-decoration: none;
+			text-underline-offset: 6px;
+
+			&:hover,
+			&:focus-visible {
+				color: var(--trip-color-secondary);
+				text-decoration: underline;
+				text-decoration-thickness: 2px;
+			}
+		}
+	}
+
+	// Only on narrow screens, and only once the menu script runs.
+	&__menu-button {
+		display: none;
+		place-items: center;
+		width: 44px;
+		height: 44px;
+		margin-inline-start: auto;
+		padding: 0;
+		border: 0;
+		border-radius: var(--trip-radius);
+		background: none;
+		color: inherit;
+		cursor: pointer;
+
+		&:hover {
+			background: color-mix(in srgb, currentcolor 8%, transparent);
+		}
+	}
+
+	&__button .wp-block-button__link {
+		min-height: 42px;
+	}
+
+	// The notifications bell and user menu.
+	&__actions {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	@media (max-width: 781px) {
+		padding: 8px 12px;
+
+		&__logo-image {
+			max-width: 120px;
+			height: 32px;
+		}
+
+		// Once the menu script runs (is-enhanced), the links fold away
+		// behind the menu button.
+		&.is-enhanced &__menu-button {
+			display: grid;
+		}
+
+
+		&.is-enhanced &__nav {
+			display: none;
+			flex-basis: 100%;
+			order: 10;
+		}
+
+		&.is-enhanced.is-open &__nav {
+			display: block;
+		}
+
+		&.is-enhanced &__links {
+			flex-direction: column;
+			gap: 0;
+
+			a {
+				display: block;
+				padding: 12px 4px;
+				border-top: 1px solid color-mix(in srgb, currentcolor 8%, transparent);
+			}
+		}
+
+		// One row: logo, then the button and the menu button on the right.
+		flex-wrap: wrap;
+		column-gap: 8px;
+
+		&__button,
+		&__actions {
+			order: 2;
+			margin-inline-start: auto;
+		}
+
+		// With a bell and user menu there's no room for the button too; it
+		// hides, leaving the account actions, as in the Offtryp app.
+		&.has-actions &__button {
+			display: none;
+		}
+
+		// Specific enough to beat the button styles in assets/ui.css.
+		& &__button.wp-block-button .wp-block-button__link {
+			min-width: 0;
+			min-height: 38px;
+			padding: 4px 14px;
+			font-size: 14px;
+		}
+
+		&.is-enhanced &__menu-button {
+			order: 3;
+			margin-inline-start: 0;
+		}
+	}
+}

@@ -1,0 +1,40 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trip-itinerary/page-header",
+	"version": "0.1.0",
+	"title": "Page header",
+	"category": "widgets",
+	"icon": "align-wide",
+	"description": "A logo linking home, links and a button on a translucent bar that can stay at the top. On phones the links fold into a menu.",
+	"keywords": [ "header", "navigation", "menu", "logo" ],
+	"textdomain": "trip-itinerary",
+	"attributes": {
+		"logo": {
+			"type": "object"
+		},
+		"links": {
+			"type": "string",
+			"role": "content"
+		},
+		"buttonText": {
+			"type": "string",
+			"role": "content"
+		},
+		"buttonUrl": {
+			"type": "string"
+		},
+		"sticky": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScriptModule": "file:./view.js"
+}
