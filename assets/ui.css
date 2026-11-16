@@ -1,0 +1,151 @@
+/**
+ * Trip Itinerary's generic UI: the font, design tokens and button styles.
+ *
+ * The font, colours and button shapes follow the Offtryp design (Montserrat,
+ * and OButton with its Primary, Secondary, Tertiary and Quaternary
+ * variants). Loaded on the site and in the editor; see includes/ui.php.
+ */
+
+/*
+ * Montserrat, variable weight, served with the plugin rather than from
+ * Google. Two subsets: Latin, and Latin Extended for letters such as
+ * č, ć, š, ž and đ. Browsers only download a subset a page uses.
+ * SIL Open Font License 1.1, see fonts/OFL.txt.
+ */
+@font-face {
+	font-family: Montserrat;
+	font-style: normal;
+	font-display: swap;
+	font-weight: 100 900;
+	src: url(fonts/montserrat-latin-ext-wght-normal.woff2) format("woff2-variations");
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+	font-family: Montserrat;
+	font-style: normal;
+	font-display: swap;
+	font-weight: 100 900;
+	src: url(fonts/montserrat-latin-wght-normal.woff2) format("woff2-variations");
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+	--trip-font: montserrat, system-ui, -apple-system, "Segoe UI", sans-serif;
+	--trip-color-primary: #55bb8f;
+	--trip-color-primary-dark: #1f9964;
+	--trip-color-secondary: #575df6;
+	--trip-color-secondary-dark: #3b3fcc;
+	--trip-color-tertiary: #fc9736;
+	--trip-color-tertiary-dark: #ea6200;
+	--trip-color-quaternary: #2d99fe;
+	--trip-color-quaternary-dark: #0b7be3;
+	--trip-color-text: #1a1c21;
+	--trip-color-text-subdued: #667085;
+	--trip-color-border: #d0d5dd;
+	--trip-radius: 10px;
+	--trip-control-height: 48px;
+}
+
+/* The plugin's blocks use the font, whatever the theme's is. */
+:where([class*="wp-block-trip-itinerary-"]),
+.wp-block-button[class*="is-style-trip-"] .wp-block-button__link {
+	font-family: var(--trip-font);
+}
+
+/*
+ * Buttons: styles for the core Button block, picked in its Styles panel.
+ * The tinted ones fill with their colour on hover, as in Offtryp.
+ */
+.wp-block-button[class*="is-style-trip-"] .wp-block-button__link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-width: 90px;
+	min-height: var(--trip-control-height);
+	padding: 6px 24px;
+	border: 1px solid transparent;
+	border-radius: var(--trip-radius);
+	font-size: 1rem;
+	font-weight: 800;
+	line-height: 1.2;
+	text-decoration: none;
+	transition:
+		background-color 0.18s ease,
+		color 0.18s ease,
+		border-color 0.18s ease;
+}
+
+.wp-block-button[class*="is-style-trip-"] .wp-block-button__link:focus-visible {
+	outline: 3px solid color-mix(in srgb, var(--trip-color-secondary) 45%, transparent);
+	outline-offset: 2px;
+}
+
+.wp-block-button.is-style-trip-primary .wp-block-button__link {
+	background: var(--trip-color-primary);
+	color: #fff;
+}
+
+.wp-block-button.is-style-trip-primary .wp-block-button__link:hover {
+	background: var(--trip-color-primary-dark);
+	color: #fff;
+}
+
+.wp-block-button.is-style-trip-primary-outline .wp-block-button__link {
+	border-color: var(--trip-color-primary-dark);
+	background: #fff;
+	color: var(--trip-color-primary-dark);
+}
+
+.wp-block-button.is-style-trip-primary-outline .wp-block-button__link:hover {
+	background: var(--trip-color-primary-dark);
+	color: #fff;
+}
+
+.wp-block-button.is-style-trip-secondary .wp-block-button__link {
+	background: color-mix(in srgb, var(--trip-color-secondary) 10%, transparent);
+	color: var(--trip-color-secondary);
+}
+
+.wp-block-button.is-style-trip-secondary .wp-block-button__link:hover {
+	background: var(--trip-color-secondary);
+	color: #fff;
+}
+
+.wp-block-button.is-style-trip-secondary-dark .wp-block-button__link {
+	background: var(--trip-color-secondary);
+	color: #fff;
+}
+
+.wp-block-button.is-style-trip-secondary-dark .wp-block-button__link:hover {
+	background: var(--trip-color-secondary-dark);
+	color: #fff;
+}
+
+.wp-block-button.is-style-trip-tertiary .wp-block-button__link {
+	background: color-mix(in srgb, var(--trip-color-tertiary) 10%, transparent);
+	color: var(--trip-color-tertiary-dark);
+}
+
+.wp-block-button.is-style-trip-tertiary .wp-block-button__link:hover {
+	background: var(--trip-color-tertiary);
+	color: #fff;
+}
+
+.wp-block-button.is-style-trip-quaternary .wp-block-button__link {
+	background: color-mix(in srgb, var(--trip-color-quaternary) 10%, transparent);
+	color: var(--trip-color-quaternary-dark);
+}
+
+.wp-block-button.is-style-trip-quaternary .wp-block-button__link:hover {
+	background: var(--trip-color-quaternary);
+	color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.wp-block-button[class*="is-style-trip-"] .wp-block-button__link {
+		transition: none;
+	}
+}
