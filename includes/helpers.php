@@ -150,8 +150,7 @@ function trip_itinerary_format_range( DateTimeImmutable $start, DateTimeImmutabl
  *
  * @param string   $start_date Trip start, as YYYY-MM-DD.
  * @param int      $travellers Number of travellers.
- * @param string[] $locations  Each day's location as plain text, in order;
- *                             only the number of days is used.
+ * @param string[] $locations  Each day's location as plain text, in order.
  * @return array[] Items with 'key', 'label', 'value' and optional 'detail'.
  */
 function trip_itinerary_summary_items( $start_date, $travellers, array $locations ) {
@@ -175,6 +174,17 @@ function trip_itinerary_summary_items( $start_date, $travellers, array $location
 			'label' => __( 'Travellers', 'trip-itinerary' ),
 			/* translators: %d: number of people. */
 			'value' => sprintf( _n( '%d person', '%d people', $travellers, 'trip-itinerary' ), $travellers ),
+		);
+	}
+
+	// "from Sarajevo": where the trip starts, the first day with a place.
+	$places = array_values( array_filter( array_map( 'trim', $locations ), 'strlen' ) );
+	if ( $places ) {
+		$items[] = array(
+			'key'   => 'from',
+			'label' => __( 'From', 'trip-itinerary' ),
+			/* translators: %s: the first place of the trip. */
+			'value' => sprintf( __( 'from %s', 'trip-itinerary' ), $places[0] ),
 		);
 	}
 
@@ -209,14 +219,15 @@ function trip_itinerary_stops( array $locations ) {
 }
 
 /**
- * The Trip footer's logo: the picked image, else the site logo, else the
- * site's name. Mirrors the preview in src/footer/edit.js.
+ * A logo: the picked image, else the site logo, else the site's name.
+ * Used by the Trip footer and the Page header.
  *
- * @param mixed $logo Stored logo: id, url, alt.
+ * @param mixed  $logo  Stored logo: id, url, alt.
+ * @param string $block Block class, such as "wp-block-trip-itinerary-footer".
  * @return string HTML.
  */
-function trip_itinerary_footer_logo_html( $logo ) {
-	$attributes = array( 'class' => 'wp-block-trip-itinerary-footer__logo-image' );
+function trip_itinerary_logo_html( $logo, $block ) {
+	$attributes = array( 'class' => $block . '__logo-image' );
 
 	if ( is_array( $logo ) && ! empty( $logo['id'] ) ) {
 		$image = wp_get_attachment_image( (int) $logo['id'], 'medium', false, $attributes );
@@ -237,5 +248,187 @@ function trip_itinerary_footer_logo_html( $logo ) {
 		}
 	}
 
-	return '<span class="wp-block-trip-itinerary-footer__site-name">' . esc_html( get_bloginfo( 'name' ) ) . '</span>';
+	return '<span class="' . esc_attr( $block ) . '__site-name">' . esc_html( get_bloginfo( 'name' ) ) . '</span>';
+}
+
+/**
+ * The Trip footer's logo. Mirrors the preview in src/footer/edit.js.
+ *
+ * @param mixed $logo Stored logo: id, url, alt.
+ * @return string HTML.
+ */
+function trip_itinerary_footer_logo_html( $logo ) {
+	return trip_itinerary_logo_html( $logo, 'wp-block-trip-itinerary-footer' );
+}
+
+/**
+ * A day's map position, if it has a valid one.
+ *
+ * @param array $attributes Day attributes, with 'lat' and 'lng'.
+ * @return float[]|null [ lat, lng ], or null.
+ */
+function trip_itinerary_coordinates( array $attributes ) {
+	$lat = $attributes['lat'] ?? null;
+	$lng = $attributes['lng'] ?? null;
+	if ( ! is_numeric( $lat ) || ! is_numeric( $lng ) || abs( $lat ) > 90 || abs( $lng ) > 180 ) {
+		return null;
+	}
+	return array( (float) $lat, (float) $lng );
+}
+
+/**
+ * The trip's stops with their map positions: the stops from
+ * trip_itinerary_stops(), each placed where the first day at that place with
+ * a position is. Stops without one are left off the map. Mirrors
+ * getMapStops() in src/shared/stops.js.
+ *
+ * @param string[]          $locations   Each day's location, in order.
+ * @param (float[]|null)[]  $coordinates Each day's [ lat, lng ] or null, in order.
+ * @return array[] Stops with 'name', 'dayIndex', 'number', 'lat' and 'lng'.
+ */
+function trip_itinerary_map_stops( array $locations, array $coordinates ) {
+	$map_stops = array();
+
+	foreach ( trip_itinerary_stops( $locations ) as $number => $stop ) {
+		$key = mb_strtolower( $stop['name'] );
+		foreach ( array_values( $locations ) as $day_index => $location ) {
+			if ( mb_strtolower( trim( (string) $location ) ) === $key && ! empty( $coordinates[ $day_index ] ) ) {
+				$map_stops[] = $stop + array(
+					'number' => $number + 1,
+					'lat'    => $coordinates[ $day_index ][0],
+					'lng'    => $coordinates[ $day_index ][1],
+				);
+				break;
+			}
+		}
+	}
+
+	return $map_stops;
+}
+
+/**
+ * The map tiles the Trip overview uses. OpenStreetMap's by default, which
+ * suit a demo or a small site; busy sites should use their own tile server
+ * or a provider, through the `trip_itinerary_map_tiles` filter.
+ *
+ * @see https://operations.osmfoundation.org/policies/tiles/
+ *
+ * @return array 'url' (a Leaflet tile URL template) and 'attribution' (HTML).
+ */
+function trip_itinerary_map_tiles() {
+	return apply_filters(
+		'trip_itinerary_map_tiles',
+		array(
+			'url'         => 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+			'attribution' => '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+		)
+	);
+}
+
+/**
+ * The first block of a type in a list of parsed blocks, at any depth.
+ *
+ * @param array[] $blocks Parsed blocks, from parse_blocks().
+ * @param string  $name   Block name.
+ * @return array|null The block, or null.
+ */
+function trip_itinerary_find_block( array $blocks, $name ) {
+	foreach ( $blocks as $parsed ) {
+		if ( ( $parsed['blockName'] ?? '' ) === $name ) {
+			return $parsed;
+		}
+		$inner = trip_itinerary_find_block( $parsed['innerBlocks'] ?? array(), $name );
+		if ( $inner ) {
+			return $inner;
+		}
+	}
+	return null;
+}
+
+/**
+ * What the Itinerary card shows about the trip on a page: read from the
+ * page's Itinerary block, so nothing has to be typed twice.
+ *
+ * @param int $page_id The page with the itinerary.
+ * @return array|null 'title', 'url', 'route', 'dates', 'facts', 'photoId'
+ *                    and 'priceUrl', or null without a published itinerary.
+ */
+function trip_itinerary_card_data( $page_id ) {
+	$page = $page_id ? get_post( $page_id ) : null;
+	if ( ! $page || 'publish' !== $page->post_status ) {
+		return null;
+	}
+
+	$itinerary = trip_itinerary_find_block( parse_blocks( $page->post_content ), 'trip-itinerary/itinerary' );
+	if ( ! $itinerary ) {
+		return null;
+	}
+
+	$attributes = $itinerary['attrs'];
+	$locations  = array();
+	$photo_id   = 0;
+	$has_price  = false;
+	foreach ( $itinerary['innerBlocks'] as $child ) {
+		if ( 'trip-itinerary/day' === $child['blockName'] ) {
+			$locations[] = trip_itinerary_plain_text( $child['attrs']['location'] ?? '' );
+			// A day's first photo, if the overview has no country photo.
+			if ( ! $photo_id && ! empty( $child['attrs']['photos'][0]['id'] ) ) {
+				$photo_id = (int) $child['attrs']['photos'][0]['id'];
+			}
+		}
+		if ( 'trip-itinerary/overview' === $child['blockName'] && ! empty( $child['attrs']['background']['id'] ) ) {
+			$overview_photo = (int) $child['attrs']['background']['id'];
+		}
+		if ( 'trip-itinerary/price' === $child['blockName'] ) {
+			$has_price = true;
+		}
+	}
+
+	// "Sarajevo to Mostar", or one place for a trip that starts and ends there.
+	$places = array_values( array_filter( $locations, 'strlen' ) );
+	$route  = '';
+	if ( $places ) {
+		$from  = $places[0];
+		$to    = end( $places );
+		$route = $from === $to
+			? $from
+			/* translators: 1: where the trip starts, 2: where it ends. */
+			: sprintf( __( '%1$s to %2$s', 'trip-itinerary' ), $from, $to );
+	}
+
+	$dates = '';
+	$facts = array();
+	foreach ( trip_itinerary_summary_items( $attributes['startDate'] ?? '', (int) ( $attributes['travellers'] ?? 0 ), $locations ) as $item ) {
+		if ( 'dates' === $item['key'] ) {
+			$dates   = $item['value'];
+			$facts[] = $item['detail'];
+		} elseif ( 'travellers' === $item['key'] ) {
+			$facts[] = $item['value'];
+		}
+	}
+
+	$url = get_permalink( $page );
+
+	return array(
+		'title'    => trip_itinerary_plain_text( $attributes['title'] ?? get_the_title( $page ) ),
+		'url'      => $url,
+		'route'    => $route,
+		'dates'    => $dates,
+		'facts'    => $facts,
+		'photoId'  => $overview_photo ?? $photo_id,
+		// The price's anchor is only predictable when the itinerary has one.
+		'priceUrl' => $has_price && ! empty( $attributes['anchor'] ) ? $url . '#' . $attributes['anchor'] . '-price' : '',
+	);
+}
+
+/**
+ * A notification's ID, for remembering in the browser that it's been read.
+ * Made from its content, so editing a notification makes it unread again,
+ * as a changed message should be.
+ *
+ * @param array $attributes Notification attributes.
+ * @return string
+ */
+function trip_itinerary_notification_id( array $attributes ) {
+	return 'n' . substr( md5( wp_json_encode( array( $attributes['title'] ?? '', $attributes['description'] ?? '', $attributes['date'] ?? '' ) ) ), 0, 12 );
 }

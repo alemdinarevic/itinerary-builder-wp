@@ -45,8 +45,7 @@ function formatRange( start, end ) {
  * @param {Object}   trip
  * @param {string}   [trip.startDate]  Trip start, as YYYY-MM-DD.
  * @param {number}   [trip.travellers] Number of travellers.
- * @param {string[]} trip.locations    Each day's location as plain text, in order;
- *                                     only the number of days is used.
+ * @param {string[]} trip.locations    Each day's location as plain text, in order.
  * @return {Array<{key: string, label: string, value: string, detail?: string}>} Items to show; empty when there's nothing to say.
  */
 export function getTripSummary( { startDate, travellers, locations } ) {
@@ -75,6 +74,20 @@ export function getTripSummary( { startDate, travellers, locations } ) {
 				/* translators: %d: number of people. */
 				_n( '%d person', '%d people', travellers, 'trip-itinerary' ),
 				travellers
+			),
+		} );
+	}
+
+	// "from Sarajevo": where the trip starts, the first day with a place.
+	const from = locations.map( ( place ) => place.trim() ).find( Boolean );
+	if ( from ) {
+		items.push( {
+			key: 'from',
+			label: __( 'From', 'trip-itinerary' ),
+			value: sprintf(
+				/* translators: %s: the first place of the trip. */
+				__( 'from %s', 'trip-itinerary' ),
+				from
 			),
 		} );
 	}

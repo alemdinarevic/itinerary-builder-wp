@@ -63,11 +63,12 @@ class HelpersTest extends WP_UnitTestCase {
 		$this->assertSame( array(), trip_itinerary_summary_items( '2026-12-04', 0, array() ) );
 	}
 
-	public function test_summary_shows_dates_then_travellers() {
+	public function test_summary_shows_dates_travellers_and_where_the_trip_starts() {
 		$this->assertSame(
 			array(
 				'dates'      => '4 – 6 Dec 2026 (3 days)',
 				'travellers' => '2 people',
+				'from'       => 'from Sarajevo',
 			),
 			$this->summary( '2026-12-04', 2, array( 'Sarajevo', 'Trebević', 'Mostar' ) )
 		);
@@ -139,6 +140,57 @@ class HelpersTest extends WP_UnitTestCase {
 			),
 			trip_itinerary_stops( array( ' ', 'Mostar', 'mostar ', 'Trebević', 'TREBEVIĆ' ) )
 		);
+	}
+
+	public function test_summary_starts_from_the_first_day_with_a_place() {
+		$summary = $this->summary( '', 0, array( '', ' Mostar ', 'Blagaj' ) );
+		$this->assertSame( 'from Mostar', $summary['from'] );
+	}
+
+	public function test_map_stops_use_the_first_day_with_a_position() {
+		$this->assertSame(
+			array(
+				array(
+					'name'     => 'Sarajevo',
+					'dayIndex' => 0,
+					'number'   => 1,
+					'lat'      => 43.86,
+					'lng'      => 18.43,
+				),
+				array(
+					'name'     => 'Mostar',
+					'dayIndex' => 1,
+					'number'   => 2,
+					'lat'      => 43.34,
+					'lng'      => 17.81,
+				),
+			),
+			trip_itinerary_map_stops(
+				array( 'Sarajevo', 'Mostar', 'Sarajevo' ),
+				array( null, array( 43.34, 17.81 ), array( 43.86, 18.43 ) )
+			)
+		);
+	}
+
+	public function test_coordinates_accept_valid_positions_only() {
+		$this->assertSame( array( 43.86, 18.43 ), trip_itinerary_coordinates( array( 'lat' => 43.86, 'lng' => 18.43 ) ) );
+		$this->assertNull( trip_itinerary_coordinates( array() ) );
+		$this->assertNull( trip_itinerary_coordinates( array( 'lat' => 91, 'lng' => 18 ) ) );
+		$this->assertNull( trip_itinerary_coordinates( array( 'lat' => 'north', 'lng' => 18 ) ) );
+	}
+
+	public function test_map_tiles_can_be_changed_with_a_filter() {
+		$this->assertStringContainsString( 'tile.openstreetmap.org', trip_itinerary_map_tiles()['url'] );
+
+		$tiles = static function () {
+			return array(
+				'url'         => 'https://tiles.example.com/{z}/{x}/{y}.png',
+				'attribution' => 'Example',
+			);
+		};
+		add_filter( 'trip_itinerary_map_tiles', $tiles );
+		$this->assertSame( 'https://tiles.example.com/{z}/{x}/{y}.png', trip_itinerary_map_tiles()['url'] );
+		remove_filter( 'trip_itinerary_map_tiles', $tiles );
 	}
 
 	public function test_plain_text_strips_markup_and_decodes_entities() {

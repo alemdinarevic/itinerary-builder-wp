@@ -19,7 +19,7 @@ describe( 'getTripSummary', () => {
 		).toEqual( [] );
 	} );
 
-	it( 'shows dates, then travellers', () => {
+	it( 'shows dates, travellers and where the trip starts', () => {
 		const items = getTripSummary( {
 			startDate: '2026-12-04',
 			travellers: 2,
@@ -29,10 +29,12 @@ describe( 'getTripSummary', () => {
 		expect( items.map( ( item ) => item.key ) ).toEqual( [
 			'dates',
 			'travellers',
+			'from',
 		] );
 		expect( values( items ) ).toEqual( {
 			dates: '4 – 6 Dec 2026 (3 days)',
 			travellers: '2 people',
+			from: 'from Sarajevo',
 		} );
 	} );
 
@@ -55,5 +57,12 @@ describe( 'getTripSummary', () => {
 	it( 'uses the singular for one traveller', () => {
 		const items = getTripSummary( { travellers: 1, locations: [] } );
 		expect( values( items ).travellers ).toBe( '1 person' );
+	} );
+
+	it( 'starts from the first day with a place', () => {
+		const items = getTripSummary( {
+			locations: [ '', ' Mostar ', 'Blagaj' ],
+		} );
+		expect( values( items ).from ).toBe( 'from Mostar' );
 	} );
 } );
