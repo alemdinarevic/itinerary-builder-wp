@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trip-itinerary/card",
+	"version": "0.1.0",
+	"title": "Itinerary card",
+	"category": "widgets",
+	"icon": "id-alt",
+	"description": "A card for a trip on another page: its photo, route, dates and travellers, with buttons to view it and request a quote. Filled in from that page's itinerary.",
+	"keywords": [ "trip", "card", "teaser", "listing" ],
+	"textdomain": "trip-itinerary",
+	"attributes": {
+		"pageId": {
+			"type": "number"
+		}
+	},
+	"supports": {
+		"html": false
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}

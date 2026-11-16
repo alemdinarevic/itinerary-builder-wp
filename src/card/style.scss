@@ -1,0 +1,110 @@
+// The Itinerary card, after the Offtryp itineraries list: a white card with
+// the trip's photo darkened under its name, route and dates, then a line of
+// facts and the buttons. Uses the tokens and buttons in assets/ui.css.
+
+.wp-block-trip-itinerary-card {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	width: 100%;
+	max-width: 320px;
+	box-sizing: border-box;
+	padding: 12px;
+	border-radius: 24px;
+	background: #fff;
+	box-shadow: 0 1px 7px rgb(0 0 0 / 18%);
+	color: var(--trip-color-text);
+	transition:
+		box-shadow 0.2s ease,
+		transform 0.2s ease;
+
+	&:hover {
+		box-shadow: 0 6px 20px rgb(0 0 0 / 14%);
+		transform: translateY(-2px);
+	}
+
+	// The photo, with the trip's name, route and dates on it.
+	&__cover {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 4px;
+		min-height: 180px;
+		padding: 16px;
+		overflow: hidden;
+		border-radius: 16px;
+		background: #2a2d34;
+		color: #fff;
+		text-align: center;
+		text-decoration: none;
+
+		> span {
+			position: relative;
+		}
+	}
+
+	&__photo {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		filter: brightness(60%);
+		transition: transform 0.4s ease;
+	}
+
+	&:hover &__photo {
+		transform: scale(1.04);
+	}
+
+	&__title {
+		font-size: 1.375rem;
+		font-weight: 700;
+		line-height: 1.2;
+	}
+
+	&__route {
+		font-size: 15px;
+		opacity: 0.95;
+	}
+
+	&__dates {
+		font-size: 12px;
+		opacity: 0.85;
+	}
+
+	&__facts {
+		margin: 0;
+		color: var(--trip-color-text-subdued);
+		font-size: 14px;
+		text-align: center;
+	}
+
+	&__actions {
+		display: grid;
+		gap: 8px;
+
+		.wp-block-button__link {
+			box-sizing: border-box;
+			width: 100%;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+
+		&,
+		&__photo {
+			transition: none;
+		}
+
+		&:hover {
+			transform: none;
+		}
+
+		&:hover &__photo {
+			transform: none;
+		}
+	}
+}
