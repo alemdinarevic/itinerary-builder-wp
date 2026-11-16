@@ -24,6 +24,12 @@
 			"items": {
 				"type": "object"
 			}
+		},
+		"lat": {
+			"type": "number"
+		},
+		"lng": {
+			"type": "number"
 		}
 	},
 	"usesContext": [ "trip-itinerary/startDate" ],

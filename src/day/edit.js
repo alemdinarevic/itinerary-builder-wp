@@ -19,6 +19,7 @@ import { useSelect } from '@wordpress/data';
 
 import { formatTripDate, toIsoDate, tripDate } from '../shared/dates';
 import CarouselPreview from './carousel-preview';
+import MapPanel from './map-panel';
 
 // Core blocks an editor can use to describe a day.
 const ALLOWED_BLOCKS = [
@@ -149,6 +150,10 @@ export default function Edit( {
 						</Button>
 					) }
 				</PanelBody>
+				<MapPanel
+					attributes={ attributes }
+					setAttributes={ setAttributes }
+				/>
 			</InspectorControls>
 
 			<article { ...blockProps }>
