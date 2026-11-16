@@ -1,0 +1,260 @@
+// The Notifications bell and panel, after the Offtryp notifications panel:
+// a rounded panel with a header and unread count, cards with a dot for
+// unread ones, and "Mark all as read" at the bottom. Uses assets/ui.css.
+
+.wp-block-trip-itinerary-notifications {
+	position: relative;
+	display: inline-block;
+	color: var(--trip-color-text);
+
+	&__bell {
+		position: relative;
+		display: grid;
+		place-items: center;
+		width: 44px;
+		height: 44px;
+		padding: 0;
+		border: 0;
+		border-radius: 50%;
+		background: none;
+		color: inherit;
+		cursor: pointer;
+
+		&:hover,
+		&:focus-visible {
+			background: color-mix(in srgb, currentcolor 8%, transparent);
+		}
+	}
+
+	&__badge {
+		position: absolute;
+		top: 4px;
+		right: 2px;
+		min-width: 18px;
+		height: 18px;
+		padding: 0 5px;
+		box-sizing: border-box;
+		border: 2px solid #fff;
+		border-radius: 9px;
+		background: var(--trip-color-primary);
+		color: #fff;
+		font-size: 10px;
+		font-weight: 700;
+		line-height: 14px;
+		text-align: center;
+	}
+
+	&__panel {
+		position: absolute;
+		top: calc(100% + 8px);
+		left: 0;
+		z-index: 30;
+		width: min(400px, calc(100vw - 24px));
+		overflow: hidden;
+		border: 1px solid rgb(0 0 0 / 8%);
+		border-radius: 14px;
+		background: #fafafa;
+		box-shadow: 0 8px 30px rgb(0 0 0 / 10%);
+		text-align: start;
+		animation: trip-panel-in 0.18s ease-out;
+
+		&[hidden] {
+			display: none;
+		}
+	}
+
+	&__header {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 16px 20px;
+		border-bottom: 1px solid rgb(0 0 0 / 6%);
+		background: #f9f6f6;
+	}
+
+	&__heading {
+		margin: 0;
+		font-size: 1.0625rem;
+		font-weight: 700;
+	}
+
+	&__count {
+		min-width: 22px;
+		padding: 2px 7px;
+		box-sizing: border-box;
+		border-radius: 11px;
+		background: var(--trip-color-primary);
+		color: #fff;
+		font-size: 11px;
+		font-weight: 700;
+		text-align: center;
+
+		&[hidden] {
+			display: none;
+		}
+	}
+
+	&__list {
+		max-height: min(420px, 60vh);
+		margin: 0;
+		padding: 0;
+		overflow-y: auto;
+		list-style: none;
+		scrollbar-width: thin;
+	}
+
+	&__footer {
+		padding: 10px 20px;
+		border-top: 1px solid rgb(0 0 0 / 6%);
+		background: #fff;
+		text-align: center;
+
+		&[hidden] {
+			display: none;
+		}
+	}
+
+	&__mark-all {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 6px 10px;
+		border: 0;
+		border-radius: 8px;
+		background: none;
+		color: var(--trip-color-primary-dark);
+		font: inherit;
+		font-size: 13px;
+		font-weight: 600;
+		cursor: pointer;
+
+		&:hover {
+			background: color-mix(in srgb, var(--trip-color-primary) 10%, transparent);
+		}
+	}
+
+	&__empty {
+		margin: 0;
+		padding: 40px 20px;
+		color: var(--trip-color-text-subdued);
+		font-size: 14px;
+		text-align: center;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+
+		&__panel {
+			animation: none;
+		}
+	}
+}
+
+// One notification. Unread ones are white with a dot; read ones fade back.
+.wp-block-trip-itinerary-notification {
+	display: flex;
+	gap: 12px;
+	margin: 0;
+	padding: 14px 20px;
+	border-bottom: 1px solid rgb(0 0 0 / 5%);
+	background: #fafafa;
+	transition: background-color 0.15s ease;
+
+	&:last-child {
+		border-bottom: 0;
+	}
+
+	&.is-unread {
+		background: #fff;
+	}
+
+	&:hover {
+		background: #f4f4f4;
+	}
+
+	&__dot {
+		flex: 0 0 8px;
+		height: 8px;
+		margin-top: 6px;
+		border-radius: 50%;
+		background: transparent;
+	}
+
+	&.is-unread &__dot {
+		background: var(--trip-color-primary);
+	}
+
+	&__body {
+		flex: 1;
+		min-width: 0;
+	}
+
+	&__date {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		margin: 0 0 4px;
+		color: var(--trip-color-text-subdued);
+		font-size: 12px;
+	}
+
+	&__title {
+		margin: 0;
+		font-size: 14px;
+		font-weight: 600;
+
+		a {
+			color: inherit;
+			text-decoration: none;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+
+	&__description {
+		margin: 2px 0 0;
+		color: var(--trip-color-text-subdued);
+		font-size: 13px;
+		line-height: 1.5;
+	}
+
+	&:not(.is-unread) &__title {
+		font-weight: 500;
+	}
+
+	&__mark {
+		margin-top: 6px;
+		padding: 0;
+		border: 0;
+		background: none;
+		color: var(--trip-color-primary-dark);
+		font: inherit;
+		font-size: 12px;
+		font-weight: 600;
+		cursor: pointer;
+
+		&:hover {
+			text-decoration: underline;
+		}
+
+		&[hidden] {
+			display: none;
+		}
+	}
+}
+
+@keyframes trip-panel-in {
+
+	from {
+		opacity: 0;
+		transform: translateY(-8px);
+	}
+}
+
+// On the Page header's bar the trigger sits at the right end, so the panel
+// opens leftwards, staying on screen.
+.wp-block-trip-itinerary-page-header__actions .wp-block-trip-itinerary-notifications__panel {
+	right: 0;
+	left: auto;
+}

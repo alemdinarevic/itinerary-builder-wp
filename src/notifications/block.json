@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trip-itinerary/notifications",
+	"version": "0.1.0",
+	"title": "Notifications",
+	"category": "widgets",
+	"icon": "bell",
+	"description": "A bell with an unread count that opens a panel of notifications. Each visitor's browser remembers which ones they've read.",
+	"keywords": [ "bell", "alerts", "announcements", "inbox" ],
+	"textdomain": "trip-itinerary",
+	"supports": {
+		"html": false
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScriptModule": "file:./view.js"
+}

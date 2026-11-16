@@ -1,0 +1,16 @@
+// Loaded only in the editor, where the panel stays open in the flow of the
+// page so the notifications can be written in place.
+.wp-block-trip-itinerary-notifications.is-open {
+	display: block;
+	max-width: 400px;
+
+	.wp-block-trip-itinerary-notifications__bell {
+		margin-inline-start: auto;
+	}
+
+	.wp-block-trip-itinerary-notifications__panel {
+		position: static;
+		margin-top: 8px;
+		animation: none;
+	}
+}
