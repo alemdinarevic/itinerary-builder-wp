@@ -1,0 +1,44 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trip-itinerary/field",
+	"version": "0.1.0",
+	"title": "Field",
+	"category": "widgets",
+	"icon": "edit-large",
+	"description": "A labelled input: text, email, phone or password, with a button to show the password.",
+	"keywords": [ "input", "form", "password", "email" ],
+	"textdomain": "trip-itinerary",
+	"attributes": {
+		"label": {
+			"type": "string",
+			"role": "content"
+		},
+		"type": {
+			"type": "string",
+			"enum": [ "text", "email", "tel", "password" ],
+			"default": "text"
+		},
+		"placeholder": {
+			"type": "string"
+		},
+		"name": {
+			"type": "string"
+		},
+		"help": {
+			"type": "string",
+			"role": "content"
+		},
+		"required": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"supports": {
+		"html": false
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScriptModule": "file:./view.js"
+}

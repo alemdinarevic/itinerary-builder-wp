@@ -1,0 +1,94 @@
+// The Field block, after the Offtryp form inputs: a small label above a
+// 48px input with 10px corners. Uses the tokens in assets/ui.css.
+
+.wp-block-trip-itinerary-field {
+	display: grid;
+	gap: 4px;
+	max-width: 28rem;
+	margin-block: 0 1.25rem;
+
+	&__label {
+		color: var(--trip-color-text);
+		font-size: 14px;
+		font-weight: 600;
+	}
+
+	&__required {
+		margin-inline-start: 2px;
+		color: var(--trip-color-tertiary-dark);
+	}
+
+	&__control {
+		position: relative;
+		display: flex;
+		align-items: center;
+	}
+
+	&__input {
+		box-sizing: border-box;
+		width: 100%;
+		height: var(--trip-control-height);
+		padding: 0 14px;
+		border: 1px solid var(--trip-color-border);
+		border-radius: var(--trip-radius);
+		background: #fff;
+		color: var(--trip-color-text);
+		font: inherit;
+		font-size: 1rem;
+		transition:
+			border-color 0.15s ease,
+			box-shadow 0.15s ease;
+
+		&::placeholder {
+			color: var(--trip-color-text-subdued);
+		}
+
+		&:hover {
+			border-color: var(--trip-color-secondary-dark);
+		}
+
+		&:focus {
+			border-color: var(--trip-color-secondary);
+			outline: none;
+			box-shadow: 0 0 0 3px color-mix(in srgb, var(--trip-color-secondary) 20%, transparent);
+		}
+	}
+
+	// Room for the show/hide button inside the input.
+	&.is-password &__input {
+		padding-inline-end: 48px;
+	}
+
+	&__toggle {
+		position: absolute;
+		inset-inline-end: 4px;
+		display: grid;
+		place-items: center;
+		width: 40px;
+		height: 40px;
+		padding: 0;
+		border: 0;
+		border-radius: 8px;
+		background: none;
+		color: var(--trip-color-primary-dark);
+		cursor: pointer;
+
+		&:hover {
+			background: color-mix(in srgb, var(--trip-color-primary) 10%, transparent);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--trip-color-secondary);
+		}
+
+		svg[hidden] {
+			display: none;
+		}
+	}
+
+	&__help {
+		margin: 2px 0 0;
+		color: var(--trip-color-text-subdued);
+		font-size: 13px;
+	}
+}
