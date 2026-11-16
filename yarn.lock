@@ -1299,6 +1299,11 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.12.tgz#afefe785949f16ac4cdd1e695935a321572dd56a"
   integrity sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==
 
+"@fontsource-variable/montserrat@^5.3.0":
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/@fontsource-variable/montserrat/-/montserrat-5.3.0.tgz#4e01a00a990f8d63c1903269117f3c31d8fed10b"
+  integrity sha512-7PaZoxaxrWLAyrhO46v65An9LhUhfkTExWLhfbywYZCnZEgg/W1rEHnlNmZKjNZ3nJTVYyicqxlJt10z/26yTA==
+
 "@formatjs/ecma402-abstract@2.3.6":
   version "2.3.6"
   resolved "https://registry.yarnpkg.com/@formatjs/ecma402-abstract/-/ecma402-abstract-2.3.6.tgz#d6ca9d3579054fe1e1a0a0b5e872e0d64922e4e1"
@@ -4761,6 +4766,20 @@
     webpack-bundle-analyzer "^4.9.1"
     webpack-cli "^5.1.4"
     webpack-dev-server "^5.2.1"
+
+"@wordpress/server-side-render@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@wordpress/server-side-render/-/server-side-render-7.1.0.tgz#2aab1b805dd9b7db221ad8edc8944af390e51048"
+  integrity sha512-K6nN3UkAGFtFTrWoPe2/Vz6/gZkKKmmVle3Ze4ep5kwD0UYH4hyFYX74S0pXAEsRt0cwGan9YrKEy5vndMvEEQ==
+  dependencies:
+    "@wordpress/api-fetch" "^8.1.0"
+    "@wordpress/blocks" "^17.1.0"
+    "@wordpress/components" "^44.0.0"
+    "@wordpress/compose" "^9.1.0"
+    "@wordpress/data" "^11.1.0"
+    "@wordpress/element" "^10.1.0"
+    "@wordpress/i18n" "^7.1.0"
+    "@wordpress/url" "^5.1.0"
 
 "@wordpress/shortcode@^5.1.0":
   version "5.1.0"
@@ -9354,6 +9373,11 @@ launch-editor@^2.14.1:
   dependencies:
     picocolors "^1.1.1"
     shell-quote "^1.10.0"
+
+leaflet@^1.9.4:
+  version "1.9.4"
+  resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.9.4.tgz#23fae724e282fa25745aff82ca4d394748db7d8d"
+  integrity sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==
 
 leven@^3.1.0:
   version "3.1.0"
