@@ -10,3 +10,8 @@
 	justify-content: center;
 	margin-block-start: 1.5rem;
 }
+
+// "Summary only": the days are still edited here, but not shown on the site.
+.wp-block-trip-itinerary-itinerary.is-style-summary .wp-block-trip-itinerary-day {
+	opacity: 0.45;
+}

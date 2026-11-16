@@ -29,7 +29,13 @@ if ( ! $trip_itinerary_stops && ! $trip_itinerary_button ) {
 		<?php if ( $trip_itinerary_stops ) : ?>
 			<ul class="wp-block-trip-itinerary-header__stops">
 				<?php foreach ( $trip_itinerary_stops as $trip_itinerary_stop ) : ?>
-					<li><a class="wp-block-trip-itinerary-header__stop" href="<?php echo esc_attr( $trip_itinerary_stop['href'] ); ?>"><?php echo esc_html( $trip_itinerary_stop['name'] ); ?></a></li>
+					<li>
+						<?php if ( $trip_itinerary_stop['href'] ) : ?>
+							<a class="wp-block-trip-itinerary-header__stop" href="<?php echo esc_attr( $trip_itinerary_stop['href'] ); ?>"><?php echo esc_html( $trip_itinerary_stop['name'] ); ?></a>
+						<?php else : ?>
+							<span class="wp-block-trip-itinerary-header__stop"><?php echo esc_html( $trip_itinerary_stop['name'] ); ?></span>
+						<?php endif; ?>
+					</li>
 				<?php endforeach; ?>
 			</ul>
 		<?php endif; ?>

@@ -7,7 +7,12 @@
 	"category": "widgets",
 	"icon": "location-alt",
 	"description": "A day-by-day trip plan. Add days, then fill each day with content.",
-	"keywords": [ "trip", "travel", "plan", "schedule" ],
+	"keywords": [
+		"trip",
+		"travel",
+		"plan",
+		"schedule"
+	],
 	"textdomain": "trip-itinerary",
 	"attributes": {
 		"title": {
@@ -28,8 +33,22 @@
 	"supports": {
 		"html": false,
 		"anchor": true,
-		"align": [ "wide", "full" ]
+		"align": [
+			"wide",
+			"full"
+		]
 	},
+	"styles": [
+		{
+			"name": "default",
+			"label": "Default",
+			"isDefault": true
+		},
+		{
+			"name": "summary",
+			"label": "Summary only"
+		}
+	],
 	"example": {
 		"attributes": {
 			"title": "A weekend in Sarajevo"

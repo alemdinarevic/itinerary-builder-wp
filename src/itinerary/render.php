@@ -19,11 +19,14 @@ if ( trip_itinerary_has_legacy_markup( $block ) ) {
 	return;
 }
 
-// Each day's location, in order, for the Trip overview and the header's stops.
-$trip_itinerary_locations = array();
+// Each day's location and map position, in order, for the Trip overview and
+// the header's stops.
+$trip_itinerary_locations   = array();
+$trip_itinerary_coordinates = array();
 foreach ( $block->inner_blocks as $trip_itinerary_child ) {
 	if ( 'trip-itinerary/day' === $trip_itinerary_child->name ) {
-		$trip_itinerary_locations[] = trip_itinerary_plain_text( $trip_itinerary_child->attributes['location'] ?? '' );
+		$trip_itinerary_locations[]   = trip_itinerary_plain_text( $trip_itinerary_child->attributes['location'] ?? '' );
+		$trip_itinerary_coordinates[] = trip_itinerary_coordinates( $trip_itinerary_child->attributes );
 	}
 }
 
@@ -35,11 +38,15 @@ $trip_itinerary_day_id = static function ( $index ) use ( $trip_itinerary_prefix
 	return $trip_itinerary_prefix . '-day-' . ( $index + 1 );
 };
 
+// The "Summary only" style keeps the days' data for the header, overview and
+// price, but doesn't show the days, so there's nothing for stops to link to.
+$trip_itinerary_summary = in_array( 'is-style-summary', explode( ' ', $attributes['className'] ?? '' ), true );
+
 $trip_itinerary_stops = array_map(
-	static function ( $stop ) use ( $trip_itinerary_day_id ) {
+	static function ( $stop ) use ( $trip_itinerary_day_id, $trip_itinerary_summary ) {
 		return array(
 			'name' => $stop['name'],
-			'href' => '#' . $trip_itinerary_day_id( $stop['dayIndex'] ),
+			'href' => $trip_itinerary_summary ? '' : '#' . $trip_itinerary_day_id( $stop['dayIndex'] ),
 		);
 	},
 	trip_itinerary_stops( $trip_itinerary_locations )
@@ -63,8 +70,9 @@ foreach ( $block->inner_blocks as $trip_itinerary_child ) {
 		$trip_itinerary_child->context['trip-itinerary/dayIndex'] = $trip_itinerary_day++;
 	}
 	if ( 'trip-itinerary/overview' === $trip_itinerary_child->name ) {
-		$trip_itinerary_child->context['trip-itinerary/locations'] = $trip_itinerary_locations;
-		$trip_itinerary_child->context['trip-itinerary/dayIds']    = array_map( $trip_itinerary_day_id, array_keys( $trip_itinerary_locations ) );
+		$trip_itinerary_child->context['trip-itinerary/locations']   = $trip_itinerary_locations;
+		$trip_itinerary_child->context['trip-itinerary/dayIds']      = $trip_itinerary_summary ? array() : array_map( $trip_itinerary_day_id, array_keys( $trip_itinerary_locations ) );
+		$trip_itinerary_child->context['trip-itinerary/coordinates'] = $trip_itinerary_coordinates;
 	}
 	if ( 'trip-itinerary/header' === $trip_itinerary_child->name ) {
 		$trip_itinerary_child->context['trip-itinerary/stops']     = $trip_itinerary_stops;
@@ -72,6 +80,9 @@ foreach ( $block->inner_blocks as $trip_itinerary_child ) {
 	}
 	if ( 'trip-itinerary/price' === $trip_itinerary_child->name ) {
 		$trip_itinerary_child->context['trip-itinerary/priceId'] = $trip_itinerary_price_id;
+	}
+	if ( $trip_itinerary_summary && 'trip-itinerary/day' === $trip_itinerary_child->name ) {
+		continue;
 	}
 	$trip_itinerary_children .= $trip_itinerary_child->render();
 }
