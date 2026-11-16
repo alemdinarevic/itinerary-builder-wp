@@ -89,7 +89,7 @@ test.describe( 'Trip itinerary', () => {
 		await expect( siteOverview ).toContainText( '2 people' );
 		await expect(
 			siteOverview.locator( '.wp-block-trip-itinerary-overview__place' )
-		).toHaveText( [ 'Sarajevo', 'Mostar', 'Day 3' ] );
+		).toHaveText( [ 'Sarajevo', 'Mostar' ] );
 	} );
 
 	test( 'the header links to each stop and its button to the price', async ( {
@@ -153,6 +153,66 @@ test.describe( 'Trip itinerary', () => {
 		await expect(
 			page.locator( '.wp-block-trip-itinerary-footer' )
 		).toContainText( 'Built with Trip Itinerary' );
+	} );
+
+	test( 'the overview maps the stops with numbered markers', async ( {
+		page,
+		requestUtils,
+	} ) => {
+		// No map tiles from OpenStreetMap during tests; the markers and
+		// line don't need them.
+		await page.route( '**/tile.openstreetmap.org/**', ( route ) =>
+			route.abort()
+		);
+
+		const day = ( location, lat, lng ) =>
+			`<!-- wp:trip-itinerary/day ${ JSON.stringify( {
+				location,
+				lat,
+				lng,
+			} ) } -->\n<!-- wp:paragraph -->\n<p>Text</p>\n<!-- /wp:paragraph -->\n<!-- /wp:trip-itinerary/day -->`;
+
+		const post = await requestUtils.createPost( {
+			title: 'Map',
+			status: 'publish',
+			content: [
+				'<!-- wp:trip-itinerary/itinerary {"startDate":"2026-12-04","travellers":2} -->',
+				'<!-- wp:trip-itinerary/overview /-->',
+				day( 'Sarajevo', 43.8597, 18.4313 ),
+				day( 'Trebević', 43.8386, 18.4502 ),
+				day( 'Mostar', 43.3373, 17.815 ),
+				'<!-- /wp:trip-itinerary/itinerary -->',
+			].join( '\n' ),
+		} );
+
+		await page.goto( post.link );
+
+		const overview = page.locator( '.wp-block-trip-itinerary-overview' );
+		await expect(
+			overview.locator( '.wp-block-trip-itinerary-overview__facts' )
+		).toHaveText( /3 days\s*·\s*2 people\s*·\s*from Sarajevo/ );
+		await expect(
+			overview.locator( '.wp-block-trip-itinerary-overview__place' )
+		).toHaveText( [ 'Sarajevo', 'Trebević', 'Mostar' ] );
+
+		const pins = overview.locator(
+			'.wp-block-trip-itinerary-overview__pin'
+		);
+		await expect( pins ).toHaveText( [ '1', '2', '3' ] );
+
+		// Sarajevo and Trebević are close enough to overlap; they're nudged
+		// apart so both numbers can be read.
+		const [ first, second ] = await Promise.all( [
+			pins.nth( 0 ).boundingBox(),
+			pins.nth( 1 ).boundingBox(),
+		] );
+		expect(
+			Math.hypot( first.x - second.x, first.y - second.y )
+		).toBeGreaterThanOrEqual( 30 );
+
+		// Clicking a marker goes to its day.
+		await pins.nth( 2 ).click();
+		await expect( page ).toHaveURL( /-day-3$/ );
 	} );
 
 	test( 'the photo carousel responds to arrows, dots, clicks and keys', async ( {

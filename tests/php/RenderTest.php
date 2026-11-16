@@ -33,7 +33,7 @@ class RenderTest extends WP_UnitTestCase {
 		$this->assertSame( array( 'First', 'Second', 'Third' ), $this->texts( $html, 'wp-block-trip-itinerary-day__title' ) );
 	}
 
-	public function test_the_overview_summarises_the_days_around_it() {
+	public function test_the_overview_summarises_the_trip_and_maps_its_stops() {
 		$html = do_blocks(
 			$this->itinerary(
 				array(
@@ -41,24 +41,19 @@ class RenderTest extends WP_UnitTestCase {
 					'travellers' => 2,
 				),
 				'<!-- wp:trip-itinerary/overview /-->'
-				. $this->day( array( 'location' => 'Sarajevo' ) )
+				. $this->day( array( 'location' => 'Sarajevo', 'lat' => 43.86, 'lng' => 18.43 ) )
 				. $this->day( array( 'location' => '<em>Trebević</em>' ) )
-				. $this->day( array( 'location' => 'Mostar' ) )
+				. $this->day( array( 'location' => 'Sarajevo' ) )
+				. $this->day( array( 'location' => 'Mostar', 'lat' => 43.34, 'lng' => 17.81 ) )
 			)
 		);
 
-		$this->assertSame(
-			array( '4 – 6 Dec 2026 · 3 days · 2 people' ),
-			$this->texts( $html, 'wp-block-trip-itinerary-overview__facts' )
-		);
+		$this->assertSame( array( '4 – 7 Dec 2026' ), $this->texts( $html, 'wp-block-trip-itinerary-overview__dates' ) );
+		$this->assertSame( array( '4 days · 2 people · from Sarajevo' ), $this->texts( $html, 'wp-block-trip-itinerary-overview__facts' ) );
 
-		// One stop per day, each linking to its day, with the place and date.
+		// Each place once, one below the other, linking to its first day.
 		$this->assertSame(
-			array(
-				'1 Day 1: Sarajevo Fri 4 Dec',
-				'2 Day 2: Trebević Sat 5 Dec',
-				'3 Day 3: Mostar Sun 6 Dec',
-			),
+			array( '1 Sarajevo Fri 4 Dec', '2 Trebević Sat 5 Dec', '3 Mostar Mon 7 Dec' ),
 			$this->texts( $html, 'wp-block-trip-itinerary-overview__link' )
 		);
 		$document = new DOMDocument();
@@ -70,12 +65,45 @@ class RenderTest extends WP_UnitTestCase {
 			$target = substr( $link->getAttribute( 'href' ), 1 );
 			$this->assertSame( 1, $xpath->query( "//article[@id='{$target}']" )->length, "{$target} is a day on the page" );
 		}
+
+		// The map gets the stops with a position, numbered as in the list.
+		$map   = $xpath->query( "//*[contains(@class, 'wp-block-trip-itinerary-overview__map')]" )->item( 0 );
+		$stops = json_decode( $map->getAttribute( 'data-stops' ), true );
+		$this->assertSame( array( 'Sarajevo', 'Mostar' ), wp_list_pluck( $stops, 'name' ) );
+		$this->assertSame( array( 1, 3 ), wp_list_pluck( $stops, 'number' ) );
+		$this->assertSame( array( 43.86, 18.43 ), array( $stops[0]['lat'], $stops[0]['lng'] ) );
+		$tiles = json_decode( $map->getAttribute( 'data-tiles' ), true );
+		$this->assertSame( trip_itinerary_map_tiles()['url'], $tiles['url'] );
+		$this->assertStringContainsString( 'OpenStreetMap', $tiles['attribution'] );
 	}
 
-	public function test_the_overview_route_waits_for_places_or_dates() {
+	public function test_the_overview_has_no_map_without_positions() {
+		$html = do_blocks( $this->itinerary( array(), '<!-- wp:trip-itinerary/overview /-->' . $this->day( array( 'location' => 'Sarajevo' ) ) ) );
+		$this->assertStringContainsString( 'wp-block-trip-itinerary-overview__list', $html );
+		$this->assertStringNotContainsString( 'wp-block-trip-itinerary-overview__map', $html );
+	}
+
+	public function test_the_overview_shows_the_country_photo_behind_the_facts() {
+		$photo = $this->photo( 'Mountains', '' );
+		$html  = do_blocks(
+			$this->itinerary(
+				array( 'travellers' => 2 ),
+				'<!-- wp:trip-itinerary/overview ' . wp_json_encode( array( 'background' => array( 'id' => $photo ) ) ) . ' /-->' . $this->day()
+			)
+		);
+
+		$processor = new WP_HTML_Tag_Processor( $html );
+		$this->assertTrue( $processor->next_tag( array( 'class_name' => 'wp-block-trip-itinerary-overview' ) ) );
+		$this->assertTrue( $processor->has_class( 'has-photo' ) );
+		$this->assertTrue( $processor->next_tag( array( 'class_name' => 'wp-block-trip-itinerary-overview__photo' ) ) );
+		$this->assertSame( '', $processor->get_attribute( 'alt' ), 'The photo is decorative' );
+		$this->assertSame( 'eager', $processor->get_attribute( 'loading' ) );
+	}
+
+	public function test_the_overview_lists_stops_only_once_days_have_places() {
 		$html = do_blocks( $this->itinerary( array( 'travellers' => 2 ), '<!-- wp:trip-itinerary/overview /-->' . $this->day() ) );
 		$this->assertStringContainsString( 'wp-block-trip-itinerary-overview__facts', $html );
-		$this->assertStringNotContainsString( 'wp-block-trip-itinerary-overview__route', $html );
+		$this->assertStringNotContainsString( 'wp-block-trip-itinerary-overview__stops', $html );
 	}
 
 	public function test_an_empty_overview_renders_nothing() {
