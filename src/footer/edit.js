@@ -2,8 +2,6 @@ import { __ } from '@wordpress/i18n';
 import {
 	BlockControls,
 	InspectorControls,
-	MediaUpload,
-	MediaUploadCheck,
 	RichText,
 	useBlockProps,
 } from '@wordpress/block-editor';
@@ -13,61 +11,12 @@ import {
 	ToolbarButton,
 	ToolbarGroup,
 } from '@wordpress/components';
-import { store as coreStore } from '@wordpress/core-data';
-import { useSelect } from '@wordpress/data';
+
+import { LogoPicker, LogoPreview, logoLabel } from '../shared/logo';
 
 export default function Edit( { attributes, setAttributes } ) {
 	const { logo, links, credit } = attributes;
-
-	// The site's name and logo, shown when no logo is picked, as on the site.
-	const site = useSelect( ( select ) => {
-		const { getEntityRecord, getMedia } = select( coreStore );
-		const settings = getEntityRecord( 'root', 'site' );
-		const logoMedia = settings?.site_logo
-			? getMedia( settings.site_logo )
-			: null;
-		return {
-			name: settings?.title,
-			logoUrl: logoMedia?.source_url,
-		};
-	}, [] );
-
-	const logoPicker = ( renderButton ) => (
-		<MediaUploadCheck>
-			<MediaUpload
-				allowedTypes={ [ 'image' ] }
-				value={ logo?.id }
-				onSelect={ ( media ) =>
-					setAttributes( {
-						logo: {
-							id: media.id,
-							url: media.sizes?.medium?.url ?? media.url,
-							alt: media.alt ?? '',
-						},
-					} )
-				}
-				render={ ( { open } ) => renderButton( open ) }
-			/>
-		</MediaUploadCheck>
-	);
-	const logoLabel = logo
-		? __( 'Replace logo', 'trip-itinerary' )
-		: __( 'Choose logo', 'trip-itinerary' );
-
-	let logoPreview = (
-		<span className="wp-block-trip-itinerary-footer__site-name">
-			{ site.name }
-		</span>
-	);
-	if ( logo?.url || site.logoUrl ) {
-		logoPreview = (
-			<img
-				className="wp-block-trip-itinerary-footer__logo-image"
-				src={ logo?.url ?? site.logoUrl }
-				alt={ logo?.alt ?? '' }
-			/>
-		);
-	}
+	const setLogo = ( value ) => setAttributes( { logo: value } );
 
 	const blockProps = useBlockProps();
 
@@ -75,11 +24,13 @@ export default function Edit( { attributes, setAttributes } ) {
 		<>
 			<BlockControls>
 				<ToolbarGroup>
-					{ logoPicker( ( open ) => (
-						<ToolbarButton onClick={ open }>
-							{ logoLabel }
-						</ToolbarButton>
-					) ) }
+					<LogoPicker logo={ logo } onChange={ setLogo }>
+						{ ( open ) => (
+							<ToolbarButton onClick={ open }>
+								{ logoLabel( logo ) }
+							</ToolbarButton>
+						) }
+					</LogoPicker>
 				</ToolbarGroup>
 			</BlockControls>
 
@@ -91,15 +42,17 @@ export default function Edit( { attributes, setAttributes } ) {
 							'trip-itinerary'
 						) }
 					</p>
-					{ logoPicker( ( open ) => (
-						<Button
-							__next40pxDefaultSize
-							variant="secondary"
-							onClick={ open }
-						>
-							{ logoLabel }
-						</Button>
-					) ) }
+					<LogoPicker logo={ logo } onChange={ setLogo }>
+						{ ( open ) => (
+							<Button
+								__next40pxDefaultSize
+								variant="secondary"
+								onClick={ open }
+							>
+								{ logoLabel( logo ) }
+							</Button>
+						) }
+					</LogoPicker>
 					{ logo && (
 						<Button
 							__next40pxDefaultSize
@@ -117,7 +70,10 @@ export default function Edit( { attributes, setAttributes } ) {
 
 			<footer { ...blockProps }>
 				<span className="wp-block-trip-itinerary-footer__logo">
-					{ logoPreview }
+					<LogoPreview
+						logo={ logo }
+						block="wp-block-trip-itinerary-footer"
+					/>
 				</span>
 				<RichText
 					tagName="p"
